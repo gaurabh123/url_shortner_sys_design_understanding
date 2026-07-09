@@ -2,8 +2,10 @@ package com.systemdesign.url_shortener.generator;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.stereotype.Component;
+@Component
 public class SequentialShortCodeGenerator implements ShortCodeGenerator{
-    
+
     private final AtomicLong counter = new AtomicLong(1);
     private static final String BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 

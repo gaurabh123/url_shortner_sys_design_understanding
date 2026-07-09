@@ -4,8 +4,10 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.systemdesign.url_shortener.domain.UrlMapping;
+import org.springframework.stereotype.Repository;
 
+import com.systemdesign.url_shortener.domain.UrlMapping;
+@Repository
 public class InMemoryUrlRepository implements UrlRepository{
     private final ConcurrentMap<String, UrlMapping> mappings = new ConcurrentHashMap<>();
     
