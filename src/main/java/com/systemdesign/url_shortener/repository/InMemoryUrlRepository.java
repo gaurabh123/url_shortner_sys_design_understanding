@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Repository;
 
 import com.systemdesign.url_shortener.domain.UrlMapping;
+import com.systemdesign.url_shortener.exception.AliasAlreadyExistsException;
 @Repository
 public class InMemoryUrlRepository implements UrlRepository{
     private final ConcurrentMap<String, UrlMapping> mappings = new ConcurrentHashMap<>();
@@ -16,7 +17,7 @@ public class InMemoryUrlRepository implements UrlRepository{
         UrlMapping existing = mappings.putIfAbsent(mapping.shortCode(), mapping);
 
         if (existing != null){
-            throw new IllegalArgumentException("Short code already exists: " + mapping.shortCode());
+            throw new AliasAlreadyExistsException(mapping.shortCode());
         }
         return mapping;
     }

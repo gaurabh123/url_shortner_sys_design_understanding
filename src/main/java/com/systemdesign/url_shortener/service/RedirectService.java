@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.systemdesign.url_shortener.domain.UrlMapping;
 import com.systemdesign.url_shortener.repository.UrlRepository;
+import com.systemdesign.url_shortener.exception.ShortCodeExpiredException;
+import com.systemdesign.url_shortener.exception.ShortCodeNotFoundException;
 
 @Service
 public class RedirectService {
@@ -17,12 +19,12 @@ public class RedirectService {
 
     public UrlMapping resolve(String shortCode){
         UrlMapping mapping = urlRepository.findByShortCode(shortCode)
-        .orElseThrow(() -> new IllegalArgumentException("short code not found: " + shortCode));
+        .orElseThrow(() -> new ShortCodeNotFoundException(shortCode));
 
         if (mapping.isExpired(Instant.now())){
-            throw new IllegalStateException("short code is expired: " + shortCode);
+            throw new ShortCodeExpiredException(shortCode);
         }
-        
+
         return mapping;
     }
 
