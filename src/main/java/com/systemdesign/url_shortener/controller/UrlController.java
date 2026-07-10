@@ -13,34 +13,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/urls")
 public class UrlController {
     private final UrlShorteningService urlShorteningService;
 
-    public UrlController(UrlShorteningService urlShorteningService){
+    public UrlController(UrlShorteningService urlShorteningService) {
         this.urlShorteningService = urlShorteningService;
     }
 
     @PostMapping
-    public ResponseEntity<CreateShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request){
+    public ResponseEntity<CreateShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request) {
         UrlMapping mapping = urlShorteningService.createShortUrl(request);
 
-        String shortUrl = "http://localhost:8080/" + mapping.shortCode();
+        String shortUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/{shortCode}")
+                .buildAndExpand(mapping.shortCode())
+                .toUriString();
 
         CreateShortUrlResponse response = new CreateShortUrlResponse(
-            mapping.shortCode(),
-            shortUrl,
-            mapping.longUrl(),
-            mapping.expiresAt()
+                mapping.shortCode(),
+                shortUrl,
+                mapping.longUrl(),
+                mapping.expiresAt()
         );
 
         return ResponseEntity
-        .status(HttpStatus.CREATED)
-        .body(response);
-
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
-    
 }
