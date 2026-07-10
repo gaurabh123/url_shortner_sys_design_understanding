@@ -7,6 +7,7 @@ import com.systemdesign.url_shortener.domain.UrlMapping;
 import com.systemdesign.url_shortener.dto.CreateShortUrlRequest;
 import com.systemdesign.url_shortener.dto.CreateShortUrlResponse;
 import com.systemdesign.url_shortener.service.UrlShorteningService;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class UrlController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateShortUrlResponse> createShortUrl(@RequestBody CreateShortUrlRequest request){
+    public ResponseEntity<CreateShortUrlResponse> createShortUrl(@Valid @RequestBody CreateShortUrlRequest request){
         UrlMapping mapping = urlShorteningService.createShortUrl(request);
 
         String shortUrl = "http://localhost:8080/" + mapping.shortCode();
